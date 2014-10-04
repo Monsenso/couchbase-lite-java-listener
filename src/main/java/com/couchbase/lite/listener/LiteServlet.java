@@ -35,6 +35,7 @@ public class LiteServlet extends HttpServlet {
     // or else the request will be refused.
     // REF: https://github.com/couchbase/couchbase-lite-java-listener/issues/35
     private Credentials allowedCredentials;
+    private boolean enableCors;
 
     public void setManager(Manager manager) {
         this.manager = manager;
@@ -42,6 +43,14 @@ public class LiteServlet extends HttpServlet {
 
     public void setListener(LiteListener listener) {
         this.listener = listener;
+    }
+
+    public void enableCors() {
+        enableCors(true);
+    }
+
+    public void enableCors(boolean enable) {
+        this.enableCors = enable;
     }
 
     public void setAllowedCredentials(Credentials allowedCredentials) {
@@ -115,6 +124,12 @@ public class LiteServlet extends HttpServlet {
                             response.addHeader(headerName, headerValue);
                         }
                     }
+                }
+
+                if(enableCors) {
+                    response.addHeader("Access-Control-Allow-Origin", "*");
+                    response.addHeader("Access-Control-Allow-Method", "POST, GET, OPTIONS");
+                    response.addHeader("Access-Control-Allow-Headers", "X-PINGOTHER");
                 }
 
                 doneSignal.countDown();

@@ -33,6 +33,19 @@ public class LiteListener implements Runnable {
      *                           credentials.
      */
     public LiteListener(Manager manager, int suggestedPort, Credentials allowedCredentials) {
+        this(manager, suggestedPort, allowedCredentials, false);
+    }
+
+                        /**
+                         * LiteListener constructor
+                         *
+                         * @param manager the Manager instance
+                         * @param suggestedPort the suggested port to use.  if not available, will hunt for a new port.
+                         *                      and this port can be discovered by calling getListenPort()
+                         * @param allowedCredentials any clients connecting to this liteserv must present these
+                         *                           credentials.
+                         */
+    public LiteListener(Manager manager, int suggestedPort, Credentials allowedCredentials, boolean enableCors) {
         this.manager = manager;
         this.httpServer = new LiteServer();
         this.httpServer.setManager(manager);
@@ -93,6 +106,10 @@ public class LiteListener implements Runnable {
 
     public int getListenPort() {
         return listenPort;
+    }
+
+    public Manager getCouchManager() {
+        return manager;
     }
 
 }
