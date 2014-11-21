@@ -1,6 +1,7 @@
 package com.couchbase.lite.listener;
 
 import com.couchbase.lite.Manager;
+import com.couchbase.lite.util.Log;
 
 import java.util.Properties;
 
@@ -9,6 +10,8 @@ import Acme.Serve.Serve;
 @SuppressWarnings("serial")
 public class LiteServer extends Serve {
 
+
+    public static final String TAG = LiteServer.class.getName();
     public static final String CBLServer_KEY = "CBLServerInternal";
     public static final String CBL_URI_SCHEME = "cblite://";
 
@@ -49,6 +52,11 @@ public class LiteServer extends Serve {
 
         //pass in the CBLServerInternal to the servlet
         LiteServlet servlet = new LiteServlet();
+
+        if (listener.isCorsEnabled()) {
+            Log.d(LiteServer.TAG, "enable CORS on the servlet");
+            servlet.enableCors();
+        }
         servlet.setManager(manager);
         servlet.setListener(listener);
         if (allowedCredentials != null) {
