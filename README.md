@@ -8,6 +8,23 @@ This can be added either via a source dependency or a maven artifact dependency.
 
 See the [couchbase-lite-android-liteserv](https://github.com/couchbaselabs/couchbase-lite-android-liteserv), which provides an example with both dependency styles.
 
+
+## How to build
+
+We assume [gradle](http://www.gradle.org) is installed - now simply.
+
+Set settings file at the first build:
+
+    $ mv settings.gradle.example settings.gradle
+
+Build a jar file:
+
+    $ ./gradlew jar
+
+Look up available features
+
+    $ ./gradlew tasks
+
 ## TJWS dependency
 
 Couchbase-lite android depends on the [Tiny Java Web Server and Servlet Container](http://tjws.sourceforge.net/).  See libs-src/Webserver-194-README.md for more details.
@@ -24,4 +41,3 @@ return builder.build();
 ```
 
 (the key point being to use `useExpectContinue(false)`)
-

@@ -63,7 +63,8 @@ public class LiteServlet extends HttpServlet {
 
         Credentials requestCredentials = credentialsWithBasicAuthentication(request);
 
-        if (allowedCredentials != null && !allowedCredentials.empty()) {
+        // credentials checks - always allow OPTIONS request (CORS prefligts)
+        if (allowedCredentials != null && !allowedCredentials.empty() && "OPTIONS".equals(request.getMethod())) {
             if (requestCredentials == null || !requestCredentials.equals(allowedCredentials)) {
                 Log.w(Log.TAG_LISTENER, "Unauthorized -- requestCredentials not given or do not match allowed credentials");
                 response.setHeader("WWW-Authenticate", "Basic realm=\"Couchbase Lite\"");
@@ -128,7 +129,7 @@ public class LiteServlet extends HttpServlet {
 
                 if(enableCors) {
                     response.addHeader("Access-Control-Allow-Origin", "*");
-                    response.addHeader("Access-Control-Allow-Method", "POST, GET, OPTIONS");
+                    response.addHeader("Access-Control-Allow-Method", "POST, GET, OPTIONS, PUT, DELETE, HEAD");
                     response.addHeader("Access-Control-Allow-Headers", "X-PINGOTHER");
                 }
 
