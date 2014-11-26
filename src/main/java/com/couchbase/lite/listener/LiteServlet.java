@@ -208,7 +208,7 @@ public class LiteServlet extends HttpServlet {
             Log.d(Log.TAG_LISTENER, "CORS headers set");
             response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
             response.addHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS,PUT,DELETE,HEAD");
-            response.addHeader("Access-Control-Allow-Headers", "Origin,X-Requested-With,Accept,Content-Type,Authorization");
+            response.addHeader("Access-Control-Allow-Headers", "Origin,Accept,Content-Type,Authorization");
             response.addHeader("Access-Control-Allow-Credentials", "true");
         }
     }
