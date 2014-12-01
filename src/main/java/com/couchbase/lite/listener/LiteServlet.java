@@ -58,14 +58,21 @@ public class LiteServlet extends HttpServlet {
     }
 
     @Override
-    public void service(HttpServletRequest request, final HttpServletResponse response)
+    public void service(final HttpServletRequest request, final HttpServletResponse response)
             throws ServletException, IOException {
 
         Credentials requestCredentials = credentialsWithBasicAuthentication(request);
 
-        // credentials checks - always allow OPTIONS request (CORS prefligts)
-        if (allowedCredentials != null && !allowedCredentials.empty() && "OPTIONS".equals(request.getMethod())) {
+        // always allow OPTIONS requests ~ CORS prefligts
+        if ("OPTIONS".equals(request.getMethod())) {
+            setCorsHeaders(request, response);
+            response.setStatus(200);
+            return;
+        }
+
+        if (allowedCredentials != null && !allowedCredentials.empty()) {
             if (requestCredentials == null || !requestCredentials.equals(allowedCredentials)) {
+                setCorsHeaders(request, response);
                 Log.w(Log.TAG_LISTENER, "Unauthorized -- requestCredentials not given or do not match allowed credentials");
                 response.setHeader("WWW-Authenticate", "Basic realm=\"Couchbase Lite\"");
                 response.setStatus(401);
@@ -127,11 +134,7 @@ public class LiteServlet extends HttpServlet {
                     }
                 }
 
-                if(enableCors) {
-                    response.addHeader("Access-Control-Allow-Origin", "*");
-                    response.addHeader("Access-Control-Allow-Method", "POST, GET, OPTIONS, PUT, DELETE, HEAD");
-                    response.addHeader("Access-Control-Allow-Headers", "X-PINGOTHER");
-                }
+                setCorsHeaders(request, response);
 
                 doneSignal.countDown();
             }
@@ -200,5 +203,14 @@ public class LiteServlet extends HttpServlet {
         return null;
     }
 
+    private void setCorsHeaders(final HttpServletRequest request, final HttpServletResponse response) {
+        if(enableCors) {
+            Log.d(Log.TAG_LISTENER, "CORS headers set");
+            response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
+            response.addHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS,PUT,DELETE,HEAD");
+            response.addHeader("Access-Control-Allow-Headers", "Origin,Accept,Content-Type,Authorization");
+            response.addHeader("Access-Control-Allow-Credentials", "true");
+        }
+    }
 
 }
